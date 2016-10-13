@@ -1,0 +1,7 @@
+Listing 10-6. Using the DBA_DATA_FILES View to Monitor the Size of the Database
+
+SELECT   tablespace_name,
+         SUM (BYTES) / 1048576 AS mb
+    FROM dba_data_files
+GROUP BY tablespace_name
+ORDER BY tablespace_name;

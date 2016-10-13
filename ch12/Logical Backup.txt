@@ -1,0 +1,1 @@
+expdp userid=\"/ as sysdba\" schemas=hr flashback_time=\"to_timestamp(to_char(sysdate,'dd-mm-yyyy hh24:mi:ss'),'dd-mm-yyyy hh24:mi:ss')\"

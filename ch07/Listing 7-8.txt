@@ -1,0 +1,22 @@
+Listing 7-8. Example of a Materialized View
+
+CREATE MATERIALIZED VIEW Orders_LineItems
+REFRESH ON COMMIT
+ENABLE QUERY REWRITE
+AS SELECT
+    -- data items from the Orders table
+    Orders.PONo,
+    Orders.Custno,
+    Orders.OrderDate,
+    Orders.ShipDate,
+    Orders.ToStreet,
+    Orders.ToCity,
+    Orders.ToState,
+    Orders.ToZip,
+    -- data items from the LineItems table
+    LineItems.LineNo,
+    LineItems.StockNo,
+    LineItems.Quantity,
+    LineItems.Discount
+FROM Orders, LineItems
+WHERE LineItems.PONo = Orders.PONo;

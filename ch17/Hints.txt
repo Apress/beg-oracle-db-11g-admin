@@ -1,0 +1,12 @@
+SELECT          /*+ INDEX(MY_INDEXES (INDEX_TYPE))
+                    INDEX(MY_TABLES (OWNER TABLE_NAME))
+                    LEADING(MY_INDEXES MY_TABLES)
+                    USE_NL(MY_TABLES)
+                */
+       DISTINCT my_tables.owner,
+                my_tables.table_name,
+                my_tables.tablespace_name
+           FROM my_tables, my_indexes
+          WHERE my_tables.owner = my_indexes.table_owner
+            AND my_tables.table_name = my_indexes.table_name
+            AND my_indexes.index_type = :index_type;

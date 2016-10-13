@@ -1,0 +1,3 @@
+SELECT undo_sql
+  FROM flashback_transaction_query
+ WHERE XID = '09001000D4030000';

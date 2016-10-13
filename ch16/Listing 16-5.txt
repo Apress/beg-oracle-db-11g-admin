@@ -1,0 +1,104 @@
+Listing 16-5. SQL Query to Display the Top Five Timed Events for a Range of Time Periods
+
+set linesize 132
+set pagesize 10000
+set tab off
+set trimout on
+set trimspool on
+set sqlblanklines on
+
+alter session set nls_date_format = 'mm/dd hh24:mi';
+
+column event format a30
+column time_spent_d format 9,999,999.90
+column aas format 9999.90
+column percentage format 999.90
+
+break on snap_id on snap_time skip 1
+
+WITH
+
+  timed_events AS
+
+  -- Get wait time from the STATS$SYSTEM_EVENT table.
+  -- Select snapshots between start_snap_id and end_snap_id.
+  -- Convert wait microseconds into seconds.
+  -- Ignore the "Idle" class (wait_class = 6).
+  -- Wait classifications are those found in the V$EVENT_NAME view.
+
+  -- Get CPU usage from the STATS$SYSSTAT table.
+  -- Select snapshots between start_snap_id and end_snap_id.
+  -- Convert CPU centiseconds into seconds.
+
+  (SELECT   snap_id,
+            event,
+            time_waited_micro / 1000000 AS time_spent
+     FROM   stats$system_event NATURAL JOIN v$event_name
+    WHERE   snap_id between &&start_snap_id and &&end_snap_id
+      AND   wait_class# != 6
+
+            UNION ALL
+
+   SELECT   snap_id,
+            'CPU used by this session' AS event,
+            VALUE / 100 as time_spent
+     FROM   stats$sysstat
+    WHERE   snap_id between &&start_snap_id and &&end_snap_id
+      AND   name = 'CPU used by this session'),
+
+------------------------------------------------------------------------------------
+
+  deltas AS
+
+  -- Use the LAG analytic function to determine the amount of increase.
+  -- Partition the rows by database startup time.
+  -- The STATS$SNAPSHOT view tells us when the database was started.
+
+  (SELECT   snap_id,
+            snap_time,
+            event,
+            (snap_time – LAG (snap_time)
+              OVER (PARTITION BY startup_time, event ORDER BY snap_id)) * 86400
+              AS snap_time_d,
+            time_spent - LAG (time_spent)
+              OVER (PARTITION BY startup_time, event ORDER BY snap_id)
+              AS time_spent_d
+     FROM   timed_events NATURAL JOIN stats$snapshot),
+
+------------------------------------------------------------------------------------
+
+  ranks AS
+
+  -- Use the RANK analytic function to rank the events.
+  -- Also compute the percentage contribution of each event.
+
+  (SELECT   snap_id,
+            snap_time,
+            event,
+            snap_time_d,
+            time_spent_d,
+            RANK()
+              OVER (PARTITION BY snap_id ORDER BY time_spent_d DESC)
+              AS rank,
+            decode(time_spent_d, 0, 0, time_spent_d / SUM(time_spent_d)
+              OVER (PARTITION BY snap_id) * 100)
+              AS percentage
+     FROM   deltas
+    WHERE   time_spent_d IS NOT NULL)
+
+------------------------------------------------------------------------------------
+
+  -- Compute Average Active Sessions for each category of time.
+  -- List the top 5 events.
+
+   SELECT   snap_id,
+            snap_time,
+            rank,
+            substr(event, 1, 30) as event,
+            time_spent_d,
+            time_spent_d / snap_time_d as aas,
+            percentage
+     FROM   ranks
+    WHERE   rank <= 5
+ ORDER BY   snap_id,
+            rank;

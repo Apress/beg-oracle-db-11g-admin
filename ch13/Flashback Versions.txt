@@ -1,0 +1,6 @@
+COLUMN versions_starttime FORMAT a32
+SELECT versions_starttime,
+       versions_xid,
+       salary
+  FROM employees VERSIONS BETWEEN TIMESTAMP SYSDATE - 1/24 AND SYSDATE
+ WHERE employee_id = 101;

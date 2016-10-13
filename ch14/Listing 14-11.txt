@@ -1,0 +1,19 @@
+Listing 14-11. SQL Query to Compute CPU Utilization
+
+WITH osstat AS
+     (SELECT snap_id,
+             LAG (snap_id) OVER (ORDER BY snap_id) AS prev_snap_id,
+             idle_time - LAG (idle_time) OVER (ORDER BY snap_id) AS idle_time,
+             busy_time - LAG (busy_time) OVER (ORDER BY snap_id) AS busy_time
+        FROM (SELECT snap_id, osstat_id, value FROM stats$osstat)
+             PIVOT
+             (SUM(value) FOR osstat_id IN (1 AS idle_time, 2 AS busy_time)))
+SELECT   s1.snap_time,
+         o.busy_time / (o.idle_time + o.busy_time) AS cpu_utilization
+    FROM osstat o,
+         stats$snapshot s1,
+         stats$snapshot s2
+   WHERE s1.snap_id = o.snap_id
+     AND s2.snap_id = o.prev_snap_id
+     AND s2.startup_time = s1.startup_time
+ORDER BY s1.snap_id;

@@ -1,0 +1,31 @@
+Listing 2-26. Suppliers Who Supply All the Parts Supplied by a Specified Supplier but No Other Parts
+
+WITH temp AS
+     (SELECT suppliername,
+             partname
+        FROM supplier,
+             (SELECT partname
+                FROM quote
+               WHERE suppliername = '&suppliername'))
+
+SELECT suppliername
+  FROM supplier
+ WHERE NOT (suppliername = '&suppliername')
+MINUS
+SELECT suppliername
+  FROM (SELECT suppliername,
+               partname
+          FROM quote
+        MINUS
+        SELECT suppliername,
+               partname
+          FROM temp)
+MINUS
+SELECT suppliername
+  FROM (SELECT suppliername,
+               partname
+          FROM temp
+        MINUS
+        SELECT  suppliername,
+               partname
+          FROM quote);

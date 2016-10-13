@@ -1,0 +1,13 @@
+Listing 8-8. Definition of the DEFAULT Profile
+
+CONNECT system
+
+COLUMN resource_type format a15 heading "RESOURCE TYPE"
+COLUMN resource_name format a30 heading "RESOURCE NAME"
+COLUMN limit format a15 heading "LIMIT"
+SELECT   resource_type,
+         resource_name,
+         LIMIT
+    FROM dba_profiles
+   WHERE PROFILE = 'DEFAULT'
+ORDER BY resource_type, resource_name;

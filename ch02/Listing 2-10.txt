@@ -1,0 +1,25 @@
+Listing 2-10. An SQL*Plus Program to Produce a Neatly Formatted Report
+
+-- Specify the dimensions of the printed page
+SET linesize 78
+SET pagesize 60
+
+-- Print page titles and a closing line
+TTITLE center "QUOTE LISTING" right "Page:" sql.pno skip 1
+REPFOOTER skip 1 center "END OF REPORT"
+
+-- Print suitable titles for each column of information
+COLUMN suppliername format a32 heading "Supplier Name"
+COLUMN partname format a32 heading "Part Name"
+COLUMN quote format 99999990.00 heading "Quote"
+
+-- Print the supplier name only once and skip a line when the supplier name changes
+BREAK on suppliername skip 1
+
+-- Print the number of parts supplied by each supplier
+COMPUTE count of partname on suppliername
+
+-- Print all information in the quote table
+  SELECT suppliername, partname, quote
+    FROM quote
+ORDER BY suppliername, partname;

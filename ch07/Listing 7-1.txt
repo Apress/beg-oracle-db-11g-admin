@@ -1,0 +1,9 @@
+Listing 7-1. Using the QUICK_TUNE Procedure to Analyze an SQL Query and Determine if Additional Indexes Should Be Created to Improve Performance
+
+sqlplus hr
+EXEC DBMS_ADVISOR.QUICK_TUNE(DBMS_ADVISOR.SQLACCESS_ADVISOR, 'QUICK_TUNE', 'SELECT * FROM employees WHERE UPPER(last_name)=''DE HAAN''');
+SET LONG 100000
+SET PAGESIZE 0
+SET HEADING OFF
+SELECT DBMS_ADVISOR.GET_TASK_SCRIPT('QUICK_TUNE') FROM dual;
+EXIT

@@ -1,0 +1,16 @@
+Listing 7-2. Example of List Partitioning
+
+CREATE TABLE sales
+(
+    item# INTEGER,
+    quantity INTEGER, 
+    store_name VARCHAR(30),
+    state_code VARCHAR(2),
+    sale_date DATE
+)
+PARTITION BY LIST (state_code) 
+(
+    PARTITION california VALUES ('CA'),
+    PARTITION oregon VALUES ('OR'),
+    PARTITION washington VALUES ('WA')
+);

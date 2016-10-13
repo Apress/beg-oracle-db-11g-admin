@@ -1,0 +1,24 @@
+Listing 2-5. DML Commands to Populate the Supplier, Part, and Quote Tables
+
+INSERT INTO part
+     VALUES ('HAMMER');
+INSERT INTO part
+     VALUES ('NAIL');
+
+INSERT INTO supplier
+     VALUES ('NEW YANKEE WORKSHOP, INC.');
+INSERT INTO supplier
+     VALUES ('OLD YANKEE WORKSHOP, INC.');
+INSERT INTO supplier
+     VALUES ('TOOL TIME, INC.');
+
+INSERT INTO quote
+     VALUES ('NEW YANKEE WORKSHOP, INC.', 'HAMMER', '1.89');
+INSERT INTO quote
+     VALUES ('NEW YANKEE WORKSHOP, INC.', 'NAIL', '0.19');
+INSERT INTO quote
+     VALUES ('OLD YANKEE WORKSHOP, INC.', 'HAMMER', '2.09');
+INSERT INTO quote
+     VALUES ('TOOL TIME, INC.', 'HAMMER', '1.99');
+INSERT INTO quote
+     VALUES ('TOOL TIME, INC.', 'NAIL', '0.20');

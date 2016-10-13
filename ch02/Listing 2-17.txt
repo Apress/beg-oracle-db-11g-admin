@@ -1,0 +1,25 @@
+Listing 2-17. Alternative Solutions to the Problem: List the Suppliers Who Supply All Parts 
+
+SELECT suppliername
+  FROM supplier
+ WHERE NOT EXISTS (
+          SELECT partname
+            FROM part
+           WHERE NOT EXISTS (
+                    SELECT *
+                      FROM quote
+                     WHERE suppliername = supplier.suppliername
+                       AND partname = part.partname));
+
+SELECT suppliername
+  FROM supplier
+ WHERE (SELECT COUNT (*)
+          FROM quote
+         WHERE suppliername = supplier.suppliername) = (SELECT COUNT (*)
+                                                          FROM part);
+
+SELECT   suppliername
+    FROM quote
+GROUP BY suppliername
+  HAVING COUNT (*) = (SELECT COUNT (*)
+                        FROM part);

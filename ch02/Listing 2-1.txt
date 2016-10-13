@@ -1,0 +1,9 @@
+Listing 2-1. Inefficient and Efficient SQL Queries
+
+SELECT partname
+  FROM quote
+ WHERE suppliername = UPPER('Tool Time, Inc.');
+
+SELECT partname
+  FROM quote
+ WHERE suppliername = 'TOOL TIME, INC.';

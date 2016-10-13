@@ -1,0 +1,7 @@
+Listing 14-2. An Example of the SHRINK SPACE Procedure
+
+ALTER TABLE sysman.mgmt_job_exec_summary
+ENABLE ROW MOVEMENT;
+
+ALTER TABLE sysman.mgmt_job_exec_summary
+SHRINK SPACE;

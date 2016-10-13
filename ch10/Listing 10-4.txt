@@ -1,0 +1,8 @@
+Listing 10-4. Monitoring the History of Modifications to Tables and Other Objects
+
+SELECT   TIMESTAMP,
+         action_name,
+         sql_text
+    FROM dba_audit_object
+   WHERE owner = 'IFERNANDEZ'
+ORDER BY TIMESTAMP;

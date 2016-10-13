@@ -1,0 +1,5 @@
+Listing 2-19. An SQL Query with Counterintuitive Results
+
+SELECT suppliername
+  FROM supplier
+ WHERE supplierstatus = 'A' OR supplierstatus = 'B';

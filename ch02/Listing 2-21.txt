@@ -1,0 +1,44 @@
+Listing 2-21. PL/SQL Program to Delete a Supplier Record and All Associated Quote Records
+
+PROCEDURE delete_supplier (suppliername_in IN VARCHAR)
+IS
+BEGIN
+   DELETE FROM supplier
+         WHERE suppliername = suppliername_in;
+
+   IF SQL%ROWCOUNT > 0
+   THEN
+      DBMS_OUTPUT.put_line ('Supplier deleted: ' || suppliername_in);
+   ELSE
+      DBMS_OUTPUT.put_line ('Supplier does not exist: ' || suppliername_in);
+   END IF;
+EXCEPTION
+   WHEN OTHERS
+   THEN
+      /* Child records were found. Delete those first. */
+      IF SQLCODE = -2292
+      THEN
+         BEGIN
+            DELETE FROM quote
+                  WHERE suppliername = suppliername_in;
+
+            /*Now try deleting the parent again. */
+            BEGIN
+               DELETE FROM supplier
+                     WHERE suppliername = suppliername_in;
+
+               DBMS_OUTPUT.put_line ('Supplier deleted: ' || suppliername_in);
+            EXCEPTION
+               WHEN OTHERS
+               THEN
+                  DBMS_OUTPUT.put_line ('Error deleting supplier; ' || SQLERRM);
+            END;
+         EXCEPTION
+            WHEN OTHERS
+            THEN
+               DBMS_OUTPUT.put_line ('Error deleting supplier; ' || SQLERRM);
+         END;
+      ELSE
+         DBMS_OUTPUT.put_line ('Error deleting supplier; ' || SQLERRM);
+      END IF;
+END;

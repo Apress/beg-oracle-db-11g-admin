@@ -1,0 +1,5 @@
+Listing 8-4. Information about Tables in the DBA_TABLES View
+
+CONNECT system
+
+DESCRIBE DBA_TABLES;

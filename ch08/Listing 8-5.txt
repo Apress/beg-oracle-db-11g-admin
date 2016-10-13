@@ -1,0 +1,24 @@
+Listing 8-5. Querying the DBA_, USER_, and ALL_ Dictionary Views
+
+CONNECT hr
+
+SELECT   object_type,
+         COUNT (*)
+    FROM dba_objects
+GROUP BY object_type
+ORDER BY 2 DESC;
+
+SELECT   object_type,
+         COUNT (*)
+    FROM user_objects
+GROUP BY object_type
+ORDER BY 2 DESC;
+
+SELECT   owner,
+         object_type,
+         COUNT (*)
+    FROM all_objects
+   WHERE object_type = 'TABLE'
+GROUP BY owner,
+         object_type
+ORDER BY 3 DESC;

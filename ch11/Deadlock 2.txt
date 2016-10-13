@@ -1,0 +1,7 @@
+/* Step 1: User A */ DELETE FROM child WHERE child_ID=1;
+
+/* Step 2: User B */ DELETE FROM child WHERE child_ID=2;
+
+/* Step 3: User A */ DELETE FROM parent WHERE parent_ID=1;
+
+/* Step 4: User B */ DELETE FROM parent WHERE parent_ID=2;

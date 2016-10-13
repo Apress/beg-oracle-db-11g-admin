@@ -1,0 +1,19 @@
+/* Create the my_tables table */
+CREATE TABLE my_tables AS
+SELECT dba_tables.*
+  FROM dba_tables;
+
+/* Create the my_indexes table */
+CREATE TABLE my_indexes AS
+SELECT dba_indexes.*
+  FROM dba_tables, dba_indexes
+ WHERE dba_tables.owner = dba_indexes.table_owner
+   AND dba_tables.table_name = dba_indexes.table_name;
+
+/* Count the records in the my_tables table */
+SELECT count(*)
+  FROM my_tables;
+
+/* Count the records in the my_indexes table */
+SELECT count(*)
+  FROM my_indexes;

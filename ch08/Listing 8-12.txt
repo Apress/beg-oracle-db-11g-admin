@@ -1,0 +1,17 @@
+Listing 8-12. Dropping a User
+
+CONNECT system
+
+DROP USER ifernand;
+
+SELECT object_type,
+       object_name
+  FROM dba_objects
+ WHERE owner = 'IFERNAND';
+
+DROP USER ifernand CASCADE;
+
+SELECT object_type,
+       object_name
+  FROM dba_objects
+ WHERE owner = 'IFERNAND';

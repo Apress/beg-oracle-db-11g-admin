@@ -1,0 +1,10 @@
+Listing 8-1. Objects Commonly Found in Schemas
+
+CONNECT system
+
+SELECT   object_type,
+         COUNT (*)
+    FROM dba_objects
+   WHERE owner = 'HR'
+GROUP BY object_type
+ORDER BY 2 DESC;

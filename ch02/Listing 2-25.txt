@@ -1,0 +1,18 @@
+Listing 2-25. Suppliers Who Do Not Supply at Least One Part That Is Supplied by a Specified Supplier
+
+WITH temp AS
+     (SELECT suppliername,
+             partname
+        FROM supplier,
+             (SELECT partname
+                FROM quote
+               WHERE suppliername = '&suppliername'))
+
+SELECT DISTINCT suppliername
+           FROM (SELECT suppliername,
+                        partname
+                   FROM temp
+                 MINUS
+                 SELECT  suppliername,
+                        partname
+                   FROM quote);

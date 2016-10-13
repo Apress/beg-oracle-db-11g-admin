@@ -1,0 +1,14 @@
+Listing 2-8. DML Command to Merge the Contents of One Table into Another Table
+
+MERGE INTO quote q
+   USING newquote n
+   ON (    q.suppliername = n.suppliername
+       AND q.partname = n.partname)
+   WHEN MATCHED THEN
+      UPDATE
+         SET quote = n.quote
+      DELETE
+         WHERE q.quote = 0
+   WHEN NOT MATCHED THEN
+      INSERT
+      VALUES (n.suppliername, n.partname, n.quote);

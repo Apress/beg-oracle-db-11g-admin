@@ -1,0 +1,5 @@
+Listing 2-6. DML Command to Modify the Values of Data Items
+
+UPDATE quote
+   SET quote = 1.1 * quote
+ WHERE suppliername = 'TOOL TIME, INC.';

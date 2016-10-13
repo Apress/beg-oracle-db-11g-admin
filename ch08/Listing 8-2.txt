@@ -1,0 +1,10 @@
+Listing 8-2. Objects Found in the SYS Schema
+
+CONNECT system
+
+SELECT   object_type,
+         COUNT (*)
+    FROM dba_objects
+   WHERE owner = 'SYS'
+GROUP BY object_type
+ORDER BY 2 DESC;

@@ -1,0 +1,9 @@
+Listing 8-10. Revoking Table Privileges from Users
+
+CONNECT ifernand
+
+REVOKE SELECT ON test FROM PUBLIC;
+
+REVOKE INSERT ON test FROM hr;
+
+REVOKE INSERT ON test FROM clerical_role;

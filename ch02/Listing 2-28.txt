@@ -1,0 +1,9 @@
+Listing 2-28. Parts That Are Supplied by Only a Specified Supplier
+
+SELECT partname
+  FROM quote
+ WHERE suppliername = '&suppliername'
+MINUS
+SELECT partname
+  FROM quote
+ WHERE suppliername != '&suppliername';

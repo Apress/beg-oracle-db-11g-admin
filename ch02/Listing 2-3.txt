@@ -1,0 +1,8 @@
+Listing 2-3. Suppliers Who Supply at Least One Part
+
+SELECT DISTINCT supplier.suppliername,
+                supplier.supplierstatus
+           FROM supplier,
+                quote
+          WHERE quote.suppliername = supplier.suppliername
+       ORDER BY suppliername;

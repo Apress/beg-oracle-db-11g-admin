@@ -1,0 +1,12 @@
+Listing 13-2. Logical Recovery Using the LogMiner Utility
+
+EXECUTE DBMS_LOGMNR.add_logfile (logfilename => 'C:\APP\IGNATIUS\FLASH_RECOVERY_AREA\ORCL\ARCHIVELOG\2008_09_20\O1_MF_1_77_4FBYS33F_.ARC', options => DBMS_LOGMNR.NEW);
+
+EXECUTE DBMS_LOGMNR.add_logfile (logfilename => 'C:\APP\IGNATIUS\FLASH_RECOVERY_AREA\ORCL\ARCHIVELOG\2008_09_20\O1_MF_1_78_4FBYS6J3_.ARC', options => DBMS_LOGMNR.addfile);
+
+EXECUTE DBMS_LOGMNR.add_logfile (logfilename => 'C:\APP\IGNATIUS\FLASH_RECOVERY_AREA\ORCL\ARCHIVELOG\2008_09_20\O1_MF_1_79_4FBYSO0H_.ARC', options => DBMS_LOGMNR.addfile);
+
+SELECT sql_undo
+  FROM v$logmnr_contents
+ WHERE seg_name = 'EMPLOYEES'
+   AND ROWNUM < 5;

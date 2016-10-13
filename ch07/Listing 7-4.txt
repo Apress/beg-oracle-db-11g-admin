@@ -1,0 +1,15 @@
+Listing 7-4. Example of Interval Partitioning
+
+CREATE TABLE sales
+(
+    item# INTEGER,
+    quantity INTEGER, 
+    store_name VARCHAR(30),
+    state_code VARCHAR(2),
+    sale_date DATE
+)
+PARTITION BY RANGE (sale_date) 
+INTERVAL(NUMTOYMINTERVAL(1, 'MONTH'))
+(
+    PARTITION olddata VALUES LESS THAN (TO_DATE('01-JAN-2008','DD-MON-YYYY'))
+);

@@ -1,0 +1,6 @@
+Listing 8-6. Minimalist Form of the CREATE USER Command
+
+CONNECT system
+
+CREATE USER ifernand
+IDENTIFIED BY qazwsxedc;

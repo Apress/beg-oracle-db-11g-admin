@@ -1,0 +1,7 @@
+Listing 14-8. Comparison of Data in V$OSSTAT and STATS$OSSTAT
+
+SELECT stat_name, value FROM v$osstat;
+
+SELECT snap_id, osstat_id, value
+  FROM stats$osstat
+ WHERE  snap_id IN (3000, 3001);

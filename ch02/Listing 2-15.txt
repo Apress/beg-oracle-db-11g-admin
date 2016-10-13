@@ -1,0 +1,20 @@
+Listing 2-15. Status of All Suppliers Who Supply Hammers—Examples of Correlated Subqueries
+
+SELECT suppliername, supplierstatus
+  FROM supplier
+ WHERE 'HAMMER' IN (SELECT partname
+                      FROM quote
+                     WHERE suppliername = supplier.suppliername);
+
+SELECT suppliername, supplierstatus
+  FROM supplier
+ WHERE 'HAMMER' = ANY (SELECT partname
+                         FROM quote
+                        WHERE suppliername = supplier.suppliername);
+
+SELECT suppliername, supplierstatus
+  FROM supplier
+ WHERE EXISTS (SELECT suppliername
+                 FROM quote
+                WHERE suppliername = supplier.suppliername
+                  AND partname = 'HAMMER');

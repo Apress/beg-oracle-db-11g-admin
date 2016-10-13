@@ -1,0 +1,13 @@
+Listing 7-5. Example of Hash Partitioning
+
+CREATE TABLE sales
+(
+    item# INTEGER,
+    quantity INTEGER, 
+    store_name VARCHAR(30),
+    state_code VARCHAR(2),
+    sale_date DATE
+)
+PARTITION BY HASH (sale_date)
+PARTITIONS 4
+STORE IN (data1, data2, data3, data4);

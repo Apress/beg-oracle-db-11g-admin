@@ -1,0 +1,20 @@
+Listing 2-4. DDL Commands to Create the Supplier, Part, and Quote Tables
+
+CREATE TABLE supplier (
+  suppliername VARCHAR(32) NOT NULL,
+  PRIMARY KEY (suppliername)
+);
+
+CREATE TABLE part (
+  partname VARCHAR(32) NOT NULL,
+  PRIMARY KEY (partname)
+);
+
+CREATE TABLE quote (
+  suppliername VARCHAR(32) NOT NULL,
+  partname VARCHAR(32) NOT NULL,
+  quote NUMBER(8,2) NOT NULL,
+  PRIMARY KEY (suppliername, partname),
+  FOREIGN KEY (suppliername) REFERENCES supplier,
+  FOREIGN KEY (partname) REFERENCES part
+);

@@ -1,0 +1,8 @@
+Listing 2-16. Status of All Suppliers Who Supply Hammers: An Example of Aggregation 
+
+SELECT suppliername, supplierstatus
+  FROM supplier
+ WHERE (SELECT COUNT (suppliername)
+          FROM quote
+         WHERE suppliername = supplier.suppliername
+           AND partname = 'HAMMER') > 0;

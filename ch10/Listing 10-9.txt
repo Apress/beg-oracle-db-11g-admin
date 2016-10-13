@@ -1,0 +1,53 @@
+Listing 10-9. SQL Query to List Logical Reads per Second and Physical Reads per Second for a One-Week Period
+
+WITH
+
+     -- Pivot the data in the STATS$SYSSTAT table
+     -- Create separate columns for physical reads and logical reads
+
+     pivoted_data AS
+
+     (SELECT *
+        FROM (SELECT snap_id,
+                     NAME,
+                     VALUE
+                FROM stats$sysstat)
+             PIVOT (SUM(value)
+               FOR name IN ('physical reads' AS physical_reads,
+                            'session logical reads' AS logical_reads))),
+
+     deltas AS
+
+     -- Use the LAG analytic function to determine the amount of increase
+
+     (SELECT snap_id,
+
+             snap_time,
+
+             snap_time
+               - LAG (snap_time)
+                   OVER (PARTITION BY startup_time
+                         ORDER BY snap_id)
+               AS duration,
+
+             physical_reads
+               - LAG (physical_reads)
+                   OVER (PARTITION BY startup_time
+                         ORDER BY snap_id)
+               AS physical_reads,
+
+             logical_reads
+               - LAG (logical_reads)
+                   OVER (PARTITION BY startup_time
+                         ORDER BY snap_id)
+               AS logical_reads
+
+        FROM pivoted_data NATURAL JOIN stats$snapshot)
+
+SELECT   snap_id,
+         to_char(snap_time, 'yyyy/mm/dd hh24:mi') as snap_time,
+         physical_reads / duration / (24 * 60 * 60) as physical_reads_per_second,
+         logical_reads / duration / (24 * 60 * 60) AS logical_reads_per_second
+    FROM deltas
+
+ORDER BY snap_id;

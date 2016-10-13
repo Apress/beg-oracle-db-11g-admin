@@ -1,0 +1,42 @@
+Listing 14-1. An Example of the SPACE_USAGE Procedure
+
+SET serveroutput on
+
+DECLARE
+   l_full_blocks          NUMBER;
+   l_fs1_blocks           NUMBER;
+   l_fs2_blocks           NUMBER;
+   l_fs3_blocks           NUMBER;
+   l_fs4_blocks           NUMBER;
+   l_unformatted_blocks   NUMBER;
+   l_full_bytes           NUMBER;
+   l_fs1_bytes            NUMBER;
+   l_fs2_bytes            NUMBER;
+   l_fs3_bytes            NUMBER;
+   l_fs4_bytes            NUMBER;
+   l_unformatted_bytes    NUMBER;
+BEGIN
+   DBMS_SPACE.space_usage (segment_owner           => 'SYSMAN',
+                           segment_name            => 'MGMT_JOB_EXEC_SUMMARY',
+                           segment_type            => 'TABLE',
+                           full_blocks             => l_full_blocks,
+                           fs1_blocks              => l_fs1_blocks,
+                           fs2_blocks              => l_fs2_blocks,
+                           fs3_blocks              => l_fs3_blocks,
+                           fs4_blocks              => l_fs4_blocks,
+                           unformatted_blocks      => l_unformatted_blocks,
+                           full_bytes              => l_full_bytes,
+                           fs1_bytes               => l_fs1_bytes,
+                           fs2_bytes               => l_fs2_bytes,
+                           fs3_bytes               => l_fs3_bytes,
+                           fs4_bytes               => l_fs4_bytes,
+                           unformatted_bytes       => l_unformatted_bytes
+                          );
+   DBMS_OUTPUT.put_line ('Full blocks:' || l_full_blocks);
+   DBMS_OUTPUT.put_line ('Upto 25% free:' || l_fs1_blocks);
+   DBMS_OUTPUT.put_line ('Upto 50% free:' || l_fs2_blocks);
+   DBMS_OUTPUT.put_line ('Upto 75% free:' || l_fs3_blocks);
+   DBMS_OUTPUT.put_line ('Upto 100% free:' || l_fs4_blocks);
+   DBMS_OUTPUT.put_line ('Unformatted blocks:' || l_unformatted_blocks);
+END;
+/

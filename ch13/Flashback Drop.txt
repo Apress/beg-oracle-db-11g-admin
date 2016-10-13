@@ -1,0 +1,23 @@
+CREATE TABLE employees_backup AS SELECT * FROM employees;
+
+SELECT COUNT (*)
+  FROM employees_backup;
+
+DROP TABLE employees_backup;
+
+DESCRIBE user_recyclebin;
+
+SELECT object_name,
+       original_name
+  FROM user_recyclebin;
+
+FLASHBACK TABLE employees_backup TO BEFORE DROP;
+
+SELECT COUNT (*)
+  FROM employees_backup;
+
+DROP TABLE employees_backup;
+
+PURGE user_recyclebin;
+
+FLASHBACK TABLE employees_backup TO BEFORE DROP;

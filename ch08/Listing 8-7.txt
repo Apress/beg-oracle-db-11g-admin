@@ -1,0 +1,17 @@
+Listing 8-7. Schema Attributes Stored in DBA_USERS
+
+CONNECT system
+
+COLUMN username format a20 heading "USER|NAME"
+COLUMN created format a10 heading "CREATED"
+COLUMN default_tablespace format a10 heading "DEFAULT|TABLESPACE"
+COLUMN temporary_tablespace format a10 heading "TEMPORARY|TABLESPACE"
+COLUMN profile format a20 heading "PROFILE"
+
+SELECT   username,
+         created,
+         default_tablespace,
+         temporary_tablespace,
+         PROFILE
+    FROM dba_users
+ORDER BY created;

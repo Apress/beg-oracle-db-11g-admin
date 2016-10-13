@@ -1,0 +1,9 @@
+Listing 2-20. Two More Examples of SQL Queries with Counterintuitive Results
+
+SELECT suppliername
+  FROM supplier
+ WHERE supplierstatus = supplierstatus;
+
+SELECT suppliername
+  FROM supplier
+ WHERE supplierstatus = 'A' OR supplierstatus != 'A';

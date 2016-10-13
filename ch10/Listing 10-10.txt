@@ -1,0 +1,128 @@
+Listing 10-10. SQL Query to List the Average Elapsed Times for Two SQL Queries of Choice
+
+WITH pivoted_data AS
+
+     -- Pivot the data in STATS$SQL_SUMMARY using two values of the SQL ID column.
+     -- q1 and q2 refer to the two values of interest in the SQL ID column.
+     -- Create new columns representing the total elapsed time and the number of
+     -- executions of each of the two queries.
+     -- The newly created columns are named as follows:
+     --   q1_elapsed_time
+     --   q1_executions
+     --   q2_elapsed_time
+     --   q2_executions
+
+     (SELECT *
+        FROM (SELECT snap_id,
+                     sql_id,
+                     elapsed_time,
+                     executions
+                FROM stats$sql_summary)
+             PIVOT (SUM(elapsed_time) AS elapsed_time,
+                    SUM(executions) AS executions
+               FOR sql_id IN ('&&1' AS q1,
+                              '&&2' AS q2))),
+
+     interpolated_data AS
+
+     -- Interpolate any missing values using the LAST_VALUE analytic function.
+     -- Use the last non-null value after the database was started.
+     -- The STATS$SNAPSHOT view tells us when the database was started.
+
+     (SELECT snap_id,
+
+             snap_time,
+
+             startup_time,
+
+             LAST_VALUE (q1_elapsed_time IGNORE NULLS)
+               OVER (PARTITION BY startup_time
+                     ORDER BY snap_id
+                     ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW)
+               AS q1_elapsed_time_i,
+
+             LAST_VALUE (q1_executions IGNORE NULLS)
+               OVER (PARTITION BY startup_time
+                     ORDER BY snap_id
+                     ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW)
+               AS q1_executions_i,
+
+             LAST_VALUE (q2_elapsed_time IGNORE NULLS)
+               OVER (PARTITION BY startup_time
+                     ORDER BY snap_id
+                     ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW)
+               AS q2_elapsed_time_i,
+
+             LAST_VALUE (q2_executions IGNORE NULLS)
+               OVER (PARTITION BY startup_time
+                     ORDER BY snap_id
+                     ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW)
+               AS q2_executions_i
+
+        FROM pivoted_data NATURAL JOIN stats$snapshot),
+
+     deltas AS
+
+     -- Use the LAG analytic function to determine the amount of increase.
+
+     (SELECT snap_id,
+
+             snap_time,
+
+             q1_elapsed_time_i
+               - LAG (q1_elapsed_time_i)
+                   OVER (PARTITION BY startup_time
+                         ORDER BY snap_id)
+               AS q1_elapsed_time_d,
+
+             q1_executions_i
+               - LAG (q1_executions_i)
+                   OVER (PARTITION BY startup_time
+                         ORDER BY snap_id)
+               AS q1_executions_d,
+
+             q2_elapsed_time_i
+               - LAG (q2_elapsed_time_i)
+                   OVER (PARTITION BY startup_time
+                         ORDER BY snap_id)
+               AS q2_elapsed_time_d,
+
+             q2_executions_i
+               - LAG (q2_executions_i)
+                   OVER (PARTITION BY startup_time
+                         ORDER BY snap_id)
+               AS q2_executions_d
+
+        FROM interpolated_data)
+
+-- Print the number of executions and average execution time for each time period.
+-- Convert microseconds to seconds when printing the average execution time.
+-- Don't print any negative values.
+
+SELECT   snap_id,
+
+         TO_CHAR (snap_time, 'yyyy/mm/dd hh24:mi') AS snap_time,
+
+         CASE
+           WHEN q1_elapsed_time_d > 0 AND q1_executions_d > 0
+             THEN q1_executions_d
+         END AS q1_executions_d,
+
+         CASE
+           WHEN q1_elapsed_time_d > 0 AND q1_executions_d > 0
+             THEN q1_elapsed_time_d / q1_executions_d / 1000000
+         END AS q1_elapsed_time_a,
+
+         CASE
+           WHEN q2_elapsed_time_d > 0 AND q2_executions_d > 0
+             THEN q2_executions_d
+         END AS q2_executions_d,
+
+         CASE
+           WHEN q2_elapsed_time_d > 0 AND q2_executions_d > 0
+             THEN q2_elapsed_time_d / q2_executions_d / 1000000
+         END AS q2_elapsed_time_a
+
+    FROM deltas
+
+ORDER BY snap_id;

@@ -1,0 +1,9 @@
+Listing 8-9. Granting Table Privileges to Users
+
+CONNECT ifernand
+
+GRANT SELECT ON TEST TO PUBLIC;
+
+GRANT INSERT ON TEST TO hr;
+
+GRANT UPDATE ON TEST TO clerical_role;

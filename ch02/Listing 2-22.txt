@@ -1,0 +1,42 @@
+Listing 2-22. Parts That Are Supplied by All Suppliers
+
+WITH
+
+-- Step 1: Join operation
+     supplierpart AS
+     (SELECT suppliername,
+             partname
+        FROM supplier,
+             part),
+
+-- Step 2: Projection operation
+     validsupplierpart AS
+     (SELECT suppliername,
+             partname
+        FROM quote),
+
+-- Step 3: Difference operation
+     invalidsupplierpart AS
+     (SELECT suppliername,
+             partname
+        FROM supplierpart
+      MINUS
+      SELECT suppliername,
+             partname
+        FROM validsupplierpart),
+
+-- Step 4: Projection operation
+     unwantedpart AS
+     (SELECT partname
+        FROM invalidsupplierpart),
+
+-- Step 5: Difference operation
+     wantedpart AS
+     (SELECT partname
+        FROM part
+      MINUS
+      SELECT partname
+        FROM unwantedpart)
+
+SELECT  partname
+  FROM wantedpart;

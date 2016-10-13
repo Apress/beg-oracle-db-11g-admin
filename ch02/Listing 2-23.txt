@@ -1,0 +1,46 @@
+Listing 2-23. Parts Supplied by OLD YANKEE WORKSHOP as Well as by TOOL TIME, INC.
+
+WITH
+
+-- Step 1: Join operation
+     supplierpart AS
+     (SELECT suppliername,
+             partname
+        FROM (SELECT 'OLD YANKEE WORKSHOP, INC.' AS suppliername
+                FROM DUAL
+              UNION
+              SELECT 'TOOL TIME, INC.' AS suppliername
+                FROM DUAL),
+             part),
+
+-- Step 2: Projection operation
+     validsupplierpart AS
+     (SELECT suppliername,
+             partname
+        FROM quote),
+
+-- Step 3: Difference operation
+     invalidsupplierpart AS
+     (SELECT suppliername,
+             partname
+        FROM supplierpart
+      MINUS
+      SELECT suppliername,
+             partname
+        FROM validsupplierpart),
+
+-- Step 4: Projection operation
+     unwantedpart AS
+     (SELECT partname
+        FROM invalidsupplierpart),
+
+-- Step 5: Difference operation
+     wantedpart AS
+     (SELECT partname
+        FROM part
+      MINUS
+      SELECT partname
+        FROM unwantedpart)
+
+SELECT partname
+  FROM wantedpart;

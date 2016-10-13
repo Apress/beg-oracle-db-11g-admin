@@ -1,0 +1,6 @@
+Listing 2-12. Status of All Suppliers Who Supply Hammers—Traditional Formulation
+
+SELECT supplier.suppliername, supplier.supplierstatus
+  FROM supplier, quote
+ WHERE supplier.suppliername = quote.suppliername
+   AND quote.partname = 'HAMMER';

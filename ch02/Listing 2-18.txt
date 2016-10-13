@@ -1,0 +1,9 @@
+Listing 2-18. A Check Constraint
+
+ALTER TABLE supplier
+ADD supplierstatus VARCHAR(4)
+CHECK (supplierstatus = 'A' OR supplierstatus = 'B');
+
+UPDATE supplier
+   SET supplierstatus = 'A'
+ WHERE suppliername != 'TOOL TIME, INC.';

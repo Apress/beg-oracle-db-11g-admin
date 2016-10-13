@@ -1,0 +1,22 @@
+Listing 9-4. Querying the Data Dictionary
+
+COLUMN free_percentage format 990.00
+
+WITH total_space AS
+     (SELECT   tablespace_name,
+               SUM (CASE
+                       WHEN autoextensible = 'YES'
+                          THEN maxbytes
+                       ELSE BYTES
+                    END) AS total_space
+          FROM dba_data_files
+      GROUP BY tablespace_name),
+     used_space AS
+     (SELECT   tablespace_name,
+               SUM (BYTES) AS used_space
+          FROM dba_segments
+      GROUP BY tablespace_name)
+SELECT tablespace_name,
+       100 - (fs.used_space / ts.total_space) * 100 AS free_percentage
+  FROM total_space ts NATURAL JOIN used_space fs
+ WHERE 100 - (fs.used_space / ts.total_space) * 100 < 10;

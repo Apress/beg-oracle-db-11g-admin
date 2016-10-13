@@ -1,0 +1,9 @@
+Listing 14-4. Using the adrci Tool to Manage Log Files
+
+adrci
+show homepath
+set homepath diag\rdbms\orcl\orcl
+show tracefile
+purge -age 60
+show tracefile
+exit

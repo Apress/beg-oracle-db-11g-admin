@@ -1,0 +1,33 @@
+Listing 6-3. Performing Basic Database Administration Tasks
+
+echo %PATH%
+
+set ORACLE_SID=ORCL
+
+lsnrctl start LISTENER
+
+net start OracleServiceORCL
+
+sqlplus sys as sysdba
+startup
+show parameter control_management_pack_access;
+alter system set control_management_pack_access=NONE;
+alter system set processes=200;
+alter system set processes=200 scope=spfile;
+exit
+
+emctl start dbconsole
+
+lsnrctl status LISTENER
+
+emctl status dbconsole
+
+emctl stop dbconsole
+
+sqlplus sys as sysdba
+shutdown immediate;
+exit
+
+net stop OracleServiceORCL
+
+lsnrctl stop LISTENER

@@ -1,0 +1,23 @@
+Listing 14-7. Checking Database Size and Free Space
+
+SET linesize 80
+SET pagesize 1000
+COLUMN tablespace_name format a10
+COLUMN file_name format a20
+
+SELECT   tablespace_name,
+         file_name,
+         file_id,
+         BYTES / 1024 AS kb,
+         autoextensible,
+         increment_by * 8192 / 1024 AS next_kb,
+         maxbytes / 1024 AS max_kb
+    FROM dba_data_files
+ORDER BY tablespace_name,
+         file_id;
+
+SELECT   file_id,
+         SUM (BYTES) / 1024 AS free_kb
+    FROM dba_free_space
+GROUP BY file_id
+ORDER BY file_id;

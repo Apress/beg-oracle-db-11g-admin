@@ -1,0 +1,14 @@
+ALTER SESSION SET statistics_level=ALL;
+
+SET AUTOTRACE on statistics
+
+/* First execution */
+SELECT DISTINCT my_tables.owner,
+                my_tables.table_name,
+                my_tables.tablespace_name
+           FROM my_tables, my_indexes
+          WHERE my_tables.owner = my_indexes.table_owner
+            AND my_tables.table_name = my_indexes.table_name
+            AND my_indexes.index_type = :index_type;
+
+SELECT * FROM TABLE (DBMS_XPLAN.display_cursor(NULL, NULL, 'TYPICAL IOSTATS LAST'));

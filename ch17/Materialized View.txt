@@ -1,0 +1,23 @@
+CREATE CLUSTER my_cluster (index_type VARCHAR2(27))
+SIZE 8192 HASHKEYS 5;
+
+CREATE MATERIALIZED VIEW LOG ON my_tables WITH ROWID;
+CREATE MATERIALIZED VIEW LOG ON my_indexes WITH ROWID;
+
+CREATE MATERIALIZED VIEW my_mv
+CLUSTER my_cluster (index_type)
+REFRESH FAST ON COMMIT
+ENABLE QUERY REWRITE
+AS
+SELECT t.ROWID AS table_rowid,
+       t.owner AS table_owner,
+       t.table_name,
+       t.tablespace_name,
+       i.ROWID AS index_rowid,
+       i.index_type
+  FROM my_tables t,
+       my_indexes i
+ WHERE t.owner = i.table_owner
+   AND t.table_name = i.table_name;
+
+EXEC DBMS_STATS.gather_table_stats(ownname=>'IFERNANDEZ',tabname=>'MY_MV');

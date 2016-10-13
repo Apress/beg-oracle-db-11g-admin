@@ -1,0 +1,32 @@
+Listing 7-9. Example of a Cluster
+
+CREATE CLUSTER Orders_LineItems (PONo NUMBER(5))
+HASHKEYS 10000 SIZE 2048;
+
+CREATE TABLE Orders
+(
+    PONo NUMBER(5),
+    Custno NUMBER(3),
+    OrderDate DATE,
+    ShipDate DATE,
+    ToStreet VARCHAR2(20),
+    ToCity VARCHAR2(20),
+    ToState CHAR(2),
+    ToZip VARCHAR2(10),
+    CONSTRAINT Orders_PK PRIMARY KEY (PONo),
+    CONSTRAINT Orders_FK1 FOREIGN KEY (CustNo) REFERENCES Customers
+)
+CLUSTER Orders_LineItems (PONo);
+
+CREATE TABLE LineItems
+(
+    LineNo NUMBER(2),
+    PONo NUMBER(5) NOT NULL,
+    StockNo NUMBER(4),
+    Quantity NUMBER(2),
+    Discount NUMBER(4,2),
+    CONSTRAINT LineItems_PK PRIMARY KEY (LineNo, PONo),
+    CONSTRAINT LineItems_FK1 FOREIGN KEY (PONo) REFERENCES Orders,
+    CONSTRAINT LineItems_FK2 FOREIGN KEY (StockNo) REFERENCES StockItems
+)
+CLUSTER Orders_LineItems (PONo);

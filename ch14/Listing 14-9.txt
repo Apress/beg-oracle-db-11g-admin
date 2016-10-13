@@ -1,0 +1,10 @@
+Listing 14-9. Using the PIVOT Operator to Produce Two-Dimensional Tables
+
+COLUMN busy_time FORMAT 9999999990
+COLUMN idle_time FORMAT 9999999990
+
+SELECT *
+  FROM (SELECT snap_id, osstat_id, value FROM stats$osstat
+         WHERE SNAP_ID IN (3000, 3001))
+       PIVOT
+       (SUM(value) FOR osstat_id IN (1 AS idle_time, 2 AS busy_time));

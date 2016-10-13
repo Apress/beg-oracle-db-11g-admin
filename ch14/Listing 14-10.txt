@@ -1,0 +1,12 @@
+Listing 14-10. Using Analytic Functions to Correlate Data in Different Rows
+
+COLUMN busy_time FORMAT 9999999990
+COLUMN idle_time FORMAT 9999999990
+
+SELECT snap_id,
+       idle_time - LAG (idle_time) OVER (ORDER BY snap_id) AS idle_time,
+       busy_time - LAG (busy_time) OVER (ORDER BY snap_id) AS busy_time
+  FROM (SELECT snap_id, osstat_id, value FROM stats$osstat
+         WHERE SNAP_ID IN (3000, 3001))
+       PIVOT
+       (SUM(value) FOR osstat_id IN (1 AS idle_time, 2 AS busy_time));

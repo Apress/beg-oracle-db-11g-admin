@@ -1,0 +1,18 @@
+Listing 10-5. Monitoring the History of Connections and Disconnections
+
+SELECT   userhost,
+         os_username,
+         username,
+         COUNT (*)
+    FROM dba_audit_session
+GROUP BY userhost,
+         os_username,
+         username
+ORDER BY userhost,
+         os_username,
+         username;
+
+SELECT TIMESTAMP AS logon_time,
+       logoff_time
+  FROM dba_audit_session
+ WHERE os_username = 'aime';

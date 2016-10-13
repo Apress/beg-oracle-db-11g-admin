@@ -1,0 +1,4 @@
+Listing 2-7. DML Command to Delete a Data Record from the Supplier Table
+
+DELETE FROM supplier
+ WHERE suppliername = 'TOOL TIME, INC.';

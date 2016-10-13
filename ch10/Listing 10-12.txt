@@ -1,0 +1,46 @@
+Listing 10-12. SQL Query to Compute the CPU Utilization Percentage
+
+WITH
+
+     pivoted_data AS
+
+     -- Pivot the data in the STATS$OSSTAT table
+     -- Create separate columns for total idle time and total busy time
+
+     (SELECT *
+        FROM (SELECT snap_id,
+                     osstat_id,
+                     VALUE
+                FROM stats$osstat)
+             PIVOT (SUM(value)
+               FOR osstat_id IN (1 AS idle_time,
+                                 2 AS busy_time))),
+
+     deltas AS
+
+     -- Use the LAG analytic function to determine the amount of increase
+
+     (SELECT snap_id,
+
+             snap_time,
+
+             idle_time
+               - LAG (idle_time)
+                   OVER (PARTITION BY startup_time
+                         ORDER BY snap_id)
+               AS idle_time,
+
+             busy_time
+               - LAG (busy_time)
+                   OVER (PARTITION BY startup_time
+                         ORDER BY snap_id)
+               AS busy_time
+
+        FROM pivoted_data NATURAL JOIN stats$snapshot)
+
+SELECT   snap_id,
+         to_char(snap_time, 'yyyy/mm/dd hh24:mi') as snap_time,
+         busy_time / (idle_time + busy_time) AS cpu_utilization_p
+    FROM deltas
+
+ORDER BY snap_id;

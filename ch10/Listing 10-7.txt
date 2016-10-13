@@ -1,0 +1,19 @@
+Listing 10-7. Using DBA_SEGMENTS to Determine the Ten Biggest Tables
+
+WITH ranked_information AS
+
+     (SELECT owner,
+             segment_name,
+             BYTES / 1048576 AS mb,
+             RANK () OVER (ORDER BY BYTES DESC) AS RANK
+        FROM dba_segments
+       WHERE segment_type = 'TABLE')
+
+SELECT   RANK,
+         owner,
+         segment_name,
+         mb
+    FROM ranked_information
+   WHERE RANK <= 10
+
+ORDER BY RANK;

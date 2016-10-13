@@ -1,0 +1,7 @@
+Listing 10-8. Tables and Views for Monitoring the Database Workload
+
+DESCRIBE v$sysstat;
+
+DESCRIBE stats$sysstat;
+
+DESCRIBE dba_hist_sysstat

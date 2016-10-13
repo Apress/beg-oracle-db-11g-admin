@@ -1,0 +1,5 @@
+Listing 8-11. Changing One’s Own Password
+
+CONNECT ifernand
+
+ALTER USER ifernand IDENTIFIED BY t0ps3cr3t;

@@ -1,0 +1,22 @@
+Listing 6-2. Creating a Functional Database with a Few Simple Commands
+
+oradim.exe -new -sid TEST
+
+echo db_name=TEST >initTEST.ora
+
+set ORACLE_SID=TEST
+
+sqlplus "/ as sysdba"
+startup nomount pfile=initTEST.ora
+create database; 
+select ts#, name from v$tablespace;
+column name format a60
+select ts#, name from v$datafile;
+column member format a60
+select group#, member from v$logfile;
+column name format a60
+select name from v$controlfile;
+shutdown immediate;
+startup mount exclusive restrict pfile=initTEST.ora
+drop database;
+exit

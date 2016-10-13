@@ -1,0 +1,62 @@
+Listing 2-9. SQL Commands Embedded in a Java Program
+
+import sqlj.runtime.*;
+import sqlj.runtime.ref.*;
+import java.sql.*;
+
+public class PrintQuote
+{
+  public static void main(String[] args)
+  {
+    Connection connection = null;
+
+    #sql iterator quote_iterator (
+      String partname,
+      double quote);
+
+    quote_iterator quote = null;
+
+    try
+    {
+
+      // Connect to the database
+      // The account name and password are provided to the program by the user
+
+      DriverManager.registerDriver(
+        new oracle.jdbc.driver.OracleDriver());
+      connection = DriverManager.getConnection(
+        "jdbc:oracle:thin:@localhost:1521:ORCL",
+        args[0],
+        args[1]);
+      DefaultContext.setDefaultContext(
+        new DefaultContext(connection));
+
+      // Retrieve the data for one supplier
+      // The supplier’s name is provided to the program by the user
+
+      String suppliername = args[2];
+
+      #sql quote = {
+         SELECT partname,
+                quote
+           FROM quote
+          WHERE suppliername = :suppliername
+         ORDER BY partname};
+
+      // Print one row of data on each line
+
+      while (quote.next()) {
+        System.out.printf(
+          "%-40s%10.2f\n",
+          quote.partname(),
+          quote.quote());
+      }
+
+      connection.close();
+
+    }
+    catch (SQLException exception) {
+      exception.printStackTrace();
+    }
+  }
+}

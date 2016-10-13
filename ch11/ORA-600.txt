@@ -1,0 +1,12 @@
+CREATE OR REPLACE FUNCTION xml_decode (i_xml_string IN VARCHAR2)
+   RETURN VARCHAR2
+IS
+BEGIN
+   RETURN DBMS_XMLGEN.CONVERT (i_xml_string, DBMS_XMLGEN.entity_decode);
+END;
+/
+
+SELECT xml_decode
+          ('The owl & the pussycat went to sea'
+          ) AS decoded_xml
+  FROM DUAL;

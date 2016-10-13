@@ -1,0 +1,10 @@
+Listing 8-3. Segment Types Found in the SYS Schema
+
+CONNECT system
+
+SELECT   segment_type,
+         COUNT (*)
+    FROM dba_segments
+   WHERE owner = 'SYS'
+GROUP BY segment_type
+ORDER BY 2 DESC;

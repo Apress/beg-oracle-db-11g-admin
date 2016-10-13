@@ -1,0 +1,12 @@
+Listing 14-5. A Sample Listing of the Contents of the DBA_AUDIT_SESSION View
+
+SELECT   TIMESTAMP AS "LOGON",
+         logoff_time AS "LOGOFF",
+         logoff_lread AS "GETS",
+         logoff_pread AS "READS",
+         logoff_lwrite AS "WRITES",
+         session_cpu AS "CPU"
+    FROM dba_audit_session
+   WHERE username = 'IGGY'
+     AND logoff_time IS NOT NULL
+ORDER BY TIMESTAMP;

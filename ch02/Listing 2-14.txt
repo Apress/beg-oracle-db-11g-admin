@@ -1,0 +1,13 @@
+Listing 2-14. Status of All Suppliers Who Supply Hammers—Examples of Subqueries
+
+SELECT suppliername, supplierstatus
+  FROM supplier
+ WHERE suppliername IN (SELECT suppliername
+                          FROM quote
+                         WHERE partname = 'HAMMER');
+
+SELECT suppliername, supplierstatus
+  FROM supplier
+ WHERE suppliername = ANY (SELECT suppliername
+                             FROM quote
+                            WHERE partname = 'HAMMER');

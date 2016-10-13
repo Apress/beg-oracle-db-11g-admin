@@ -1,0 +1,13 @@
+Listing 2-13. Status of All Suppliers Who Supply Hammers—Modern Formulations
+
+SELECT suppliername, supplier.supplierstatus
+  FROM supplier NATURAL JOIN quote
+ WHERE quote.partname = 'HAMMER';
+
+SELECT suppliername, supplier.supplierstatus
+  FROM supplier JOIN quote USING (suppliername)
+ WHERE quote.partname = 'HAMMER';
+
+SELECT supplier.suppliername, supplier.supplierstatus
+  FROM supplier JOIN quote ON (supplier.suppliername = quote.suppliername)
+ WHERE quote.partname = 'HAMMER';

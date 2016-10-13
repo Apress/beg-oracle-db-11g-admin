@@ -1,0 +1,5 @@
+EXEC DBMS_STATS.gather_table_stats(ownname=>'IFERNANDEZ',tabname=>'MY_TABLES');
+EXEC DBMS_STATS.gather_table_stats(ownname=>'IFERNANDEZ',tabname=>'MY_INDEXES');
+EXEC DBMS_STATS.gather_index_stats(ownname=>'IFERNANDEZ',indname=>'MY_TABLES_PK');
+EXEC DBMS_STATS.gather_index_stats(ownname=>'IFERNANDEZ',indname=>'MY_INDEXES_I1');
+EXEC DBMS_STATS.gather_index_stats(ownname=>'IFERNANDEZ',indname=>'MY_INDEXES_FK1');

@@ -1,0 +1,30 @@
+Listing 2-27. Suppliers Who Supply All the Parts Supplied by a Specified Supplier at Cheaper Prices
+
+WITH temp AS
+     (SELECT suppliername,
+             partname
+        FROM supplier,
+             (SELECT partname
+                FROM quote
+               WHERE suppliername = '&suppliername'))
+
+SELECT suppliername
+  FROM supplier
+ WHERE NOT (suppliername = '&suppliername')
+MINUS
+SELECT suppliername
+  FROM (SELECT suppliername,
+               partname
+          FROM temp
+        MINUS
+        SELECT suppliername,
+               partname
+          FROM quote)
+MINUS
+SELECT q2.suppliername
+  FROM quote q1,
+       quote q2
+ WHERE q1.suppliername = '&suppliername'
+   AND q2.suppliername != '&suppliername'
+   AND q2.partname = q1.partname
+   AND q2.quote >= q1.quote;

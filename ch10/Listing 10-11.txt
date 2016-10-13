@@ -1,0 +1,7 @@
+Listing 10-11. Tables and Views for Monitoring Database Capacity
+
+DESCRIBE v$osstat;
+
+DESCRIBE stats$osstat
+
+DESCRIBE dba_hist_osstat

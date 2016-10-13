@@ -1,0 +1,11 @@
+Listing 9-1. Creating an Account with DBA Privileges
+
+CONNECT system
+
+CREATE USER ifernand
+IDENTIFIED BY change_immediately
+PASSWORD EXPIRE;
+
+GRANT DBA TO ifernand;
+
+CONNECT ifernand

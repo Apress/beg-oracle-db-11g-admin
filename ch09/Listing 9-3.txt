@@ -1,0 +1,11 @@
+Listing 9-3. A Sample Data Dictionary Table and View
+
+DESCRIBE sys.ts$
+
+DESCRIBE sys.dba_tablespaces
+
+SET LONG 10000
+SELECT text
+  FROM SYS.dba_views
+ WHERE owner = 'SYS'
+   AND view_name = 'DBA_TABLESPACES';
